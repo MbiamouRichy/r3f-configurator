@@ -1,9 +1,11 @@
 import {
   AccumulativeShadows,
   Center,
+  Decal,
   Environment,
   RandomizedLight,
   useGLTF,
+  useTexture,
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { easing } from "maath";
@@ -32,16 +34,32 @@ export const App = () => (
 );
 
 function Shirt(props) {
+  const snap = useSnapshot(state);
+
+  const texture = useTexture(`/${snap.selectedDecal}.png`);
+
   const { nodes, materials } = useGLTF("/shirt_baked_collapsed.glb");
+
+  useFrame((state, delta) =>
+    easing.dampC(materials.lambert1.color, snap.selectedColor, 0.25, delta)
+  );
   return (
-    <group {...props} dispose={null}>
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.T_Shirt_male.geometry}
-        material={materials.lambert1}
+    <mesh
+      castShadow
+      receiveShadow
+      geometry={nodes.T_Shirt_male.geometry}
+      material={materials.lambert1}
+      {...props}
+      dispose={null}
+    >
+      <Decal
+        position={[0, 0.04, 0.15]}
+        rotation={[0, 0, 0]}
+        scale={0.15}
+        opacity={0.7}
+        map={texture}
       />
-    </group>
+    </mesh>
   );
 }
 
