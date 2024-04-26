@@ -8,7 +8,8 @@ import {
 import { Canvas, useFrame } from "@react-three/fiber";
 import { easing } from "maath";
 import { useRef } from "react";
-
+import { useSnapshot } from "valtio";
+import { state } from "./store";
 let position = [-1, 0, 2.5];
 let fov = 25;
 
